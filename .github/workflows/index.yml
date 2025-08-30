@@ -1,29 +1,37 @@
-name: Build Ledger Index
+name: Build Index
 on:
-  push:
+  pull_request:
     paths:
-      - 'drafts/**'
-      - 'ledger/**'
-      - 'canonized/**'
-  workflow_dispatch:
+      - 'canonized/**/*.md'
+      - 'intake/**/*.md'
+      - 'tools/build_index.py'
+  push:
+    branches: [ main ]
+    paths:
+      - 'canonized/**/*.md'
+      - 'intake/**/*.md'
+      - 'tools/build_index.py'
 jobs:
-  index:
+  build-index:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Generate INDEX.md
+        with: { persist-credentials: false }
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.x' }
+      - name: Build INDEX.md
+        run: python tools/build_index.py . INDEX.md
+      - name: Commit index if changed
         run: |
-          echo "# Ledger Index" > INDEX.md
-          echo "## Drafts" >> INDEX.md
-          ls -1 drafts | sed 's/^/- /' >> INDEX.md || true
-          echo -e "\n## Ledger" >> INDEX.md
-          ls -1 ledger | sed 's/^/- /' >> INDEX.md || true
-          echo -e "\n## Canonized (links)" >> INDEX.md
-          ls -1 canonized | sed 's/^/- /' >> INDEX.md || true
-      - name: Commit index
-        run: |
-          git config user.name "quietwire-bot"
-          git config user.email "bot@quietwire.ai"
-          git add INDEX.md
-          git commit -m "chore: update INDEX.md" || echo "No changes"
-          git push
+          if ! git diff --quiet INDEX.md; then
+            git config user.name "quietwire-bot"
+            git config user.email "bot@quietwire.ai"
+            git add INDEX.md
+            git commit -m "chore(index): auto-update canonical index"
+          fi
+      - name: Push
+        if: success()
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.head_ref || github.ref_name }}
