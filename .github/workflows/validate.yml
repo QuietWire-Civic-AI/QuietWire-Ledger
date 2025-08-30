@@ -1,0 +1,14 @@
+name: Validate Structure
+on:
+  pull_request:
+    branches: [main]
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Ensure required dirs exist
+        run: |
+          test -d drafts || (echo "Missing /drafts" && exit 1)
+          test -d ledger || (echo "Missing /ledger" && exit 1)
+          test -d canonized || (echo "Missing /canonized" && exit 1)
