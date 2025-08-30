@@ -1,0 +1,41 @@
+name: "Submit Fragment (Invited)"
+description: "Propose a fragment to refine toward the Ledger"
+title: "Fragment: <Short Title>"
+labels: ["status:intake","needs:archivist"]
+body:
+  - type: input
+    id: owner
+    attributes:
+      label: Fragment Owner
+      placeholder: "Name / Node"
+    validations:
+      required: true
+  - type: dropdown
+    id: type
+    attributes:
+      label: Type
+      options: ["story","protocol","glyph","note","other"]
+    validations:
+      required: true
+  - type: textarea
+    id: text
+    attributes:
+      label: Text (or link)
+      description: Paste fragment or link. Keep it short if pasting.
+    validations:
+      required: true
+  - type: textarea
+    id: cover
+    attributes:
+      label: Cover Note (if any)
+      description: Purpose, intended audience, sensitivity.
+    validations:
+      required: false
+  - type: checkboxes
+    id: signals
+    attributes:
+      label: Signals
+      options:
+        - label: "MAML 🐾"
+        - label: "Mesh 🌐"
+        - label: "Dual 🔗"
