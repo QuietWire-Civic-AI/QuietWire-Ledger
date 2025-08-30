@@ -1,0 +1,29 @@
+name: Build Ledger Index
+on:
+  push:
+    paths:
+      - 'drafts/**'
+      - 'ledger/**'
+      - 'canonized/**'
+  workflow_dispatch:
+jobs:
+  index:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Generate INDEX.md
+        run: |
+          echo "# Ledger Index" > INDEX.md
+          echo "## Drafts" >> INDEX.md
+          ls -1 drafts | sed 's/^/- /' >> INDEX.md || true
+          echo -e "\n## Ledger" >> INDEX.md
+          ls -1 ledger | sed 's/^/- /' >> INDEX.md || true
+          echo -e "\n## Canonized (links)" >> INDEX.md
+          ls -1 canonized | sed 's/^/- /' >> INDEX.md || true
+      - name: Commit index
+        run: |
+          git config user.name "quietwire-bot"
+          git config user.email "bot@quietwire.ai"
+          git add INDEX.md
+          git commit -m "chore: update INDEX.md" || echo "No changes"
+          git push
