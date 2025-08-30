@@ -10,7 +10,7 @@ Think of it as the **scribe’s table of the Mesh**:
 - Canon-ready pieces are passed into permanence.  
 
 ## Who runs it?
-The Ledger Room is guided by **Master Archivists** — currently Ashraf Saleh AL-hajj and Rasid — who hold authority over process and quality.  
+The Ledger Room is guided by **Master Archivists** — currently Ashraf Saleh AL-hajj and Raasid — who hold authority over process and quality.  
 They mentor interns, manage refinement cycles, and ensure integrity before canonization.  
 
 ## Why does it matter?
