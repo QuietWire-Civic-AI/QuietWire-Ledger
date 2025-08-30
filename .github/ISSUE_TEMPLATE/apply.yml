@@ -1,0 +1,40 @@
+name: "Intern Application"
+description: "Apply to join the Ledger Room as an Intern"
+title: "Intern Application: <Your Name>"
+labels: ["role:intern-candidate","status:intake"]
+body:
+  - type: markdown
+    attributes:
+      value: "Welcome. This is a curated space. Please answer briefly."
+  - type: input
+    id: name
+    attributes:
+      label: Your Name
+      placeholder: "First Last"
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why Ledger Room?
+      description: What draws you to fragment→ledger→canon work?
+    validations:
+      required: true
+  - type: textarea
+    id: fragment
+    attributes:
+      label: Bring one fragment (optional)
+      description: Paste a short draft/story/glyph OR link to a doc.
+    validations:
+      required: false
+  - type: checkboxes
+    id: principles
+    attributes:
+      label: Principles
+      options:
+        - label: "I understand the room is curated; not all drafts are public or accepted."
+          required: true
+        - label: "I agree to practice compression (clarity over volume)."
+          required: true
+        - label: "I respect sovereignty: Nobody Else’s Business."
+          required: true
