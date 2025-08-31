@@ -1,0 +1,11 @@
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.tmp
+*.bak
+
+# Tool caches / artifacts
+*.hashes.json
+*.bodyhash.json
+.linkcheck-cache.json
