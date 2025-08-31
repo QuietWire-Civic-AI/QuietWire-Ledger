@@ -1,14 +1,31 @@
-name: Validate Structure
+name: Validate Ledger
 on:
   pull_request:
-    branches: [main]
+    paths:
+      - 'canonized/**/*.md'
+      - 'intake/**/*.md'
+      - 'tests/validate_entry_format.py'
+      - 'tools/**'
+    paths-ignore:
+      - 'templates/**'
+      - 'governance/**'
+  push:
+    branches: [ main ]
+    paths:
+      - 'canonized/**/*.md'
+      - 'intake/**/*.md'
+      - 'tests/validate_entry_format.py'
+      - 'tools/**'
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - name: Ensure required dirs exist
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.x' }
+      - name: Run Ledger format validator
         run: |
-          test -d drafts || (echo "Missing /drafts" && exit 1)
-          test -d ledger || (echo "Missing /ledger" && exit 1)
-          test -d canonized || (echo "Missing /canonized" && exit 1)
+          python -V
+          python tests/validate_entry_format.py --root . \
+            --glob "canonized/**/*.md" --also "intake/**/*.md" \
+            --ignore "**/README.md"
