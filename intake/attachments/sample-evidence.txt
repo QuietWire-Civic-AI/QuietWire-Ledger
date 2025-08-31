@@ -1,0 +1,27 @@
+QuietWire Intake — Sample Evidence (Redacted)
+File: intake/attachments/sample-evidence.txt
+Collected: 2025-08-31T12:30+03:00 (Asia/Aden)
+Collector: Demo User
+Purpose: Minimal local evidence to exercise hashing/validation pipelines.
+Notes: Sensitive values replaced with REDACTED. Original held offline by Master Archivists.
+
+---- Begin Extract (system log) ----
+2025-08-30T08:12:14+03:00 host=node-a proc=daemon[4123]: boot sequence started
+2025-08-30T08:12:16+03:00 host=node-a proc=netd[2211]: interface up eth0 addr=10.0.12.34  # REDACTED: private IP
+2025-08-30T08:12:17+03:00 host=node-a proc=authd[1099]: user=REDACTED action=LOGIN result=SUCCESS
+2025-08-30T08:12:20+03:00 host=node-a proc=agent[7351]: posting metric batch size=128 topic=/metrics/node-a
+2025-08-30T08:12:23+03:00 host=node-a proc=app[9054]: received webhook id=REDACTED token=REDACTED   # tokens redacted
+2025-08-30T08:12:24+03:00 host=node-a proc=app[9054]: http 200 OK path=/api/v1/healthz latency_ms=41
+---- End Extract ----
+
+Chain-of-Custody:
+- 2025-08-31T12:30+03:00: Collected & redacted by Demo User (checksum to be computed in CI).
+- 2025-08-31T12:31+03:00: Committed to repo under intake/attachments/.
+
+Integrity:
+- sha256: (auto-filled by tools/hash_attachments.py)
+- size:   (auto-filled by tools/hash_attachments.py)
+
+Policy Reminder:
+- No secrets or PII. Redact aggressively.
+- Keep files <= 5 MB (hard cap 10 MB). Use provenance href for large sources.
