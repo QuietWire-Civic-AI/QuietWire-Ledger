@@ -1,37 +1,35 @@
 # 🪶 The QuietWire Ledger Room
 
-## What is the Ledger Room?
-The Ledger Room is where **fragments become durable**.  
-It is a space for drafts, reflections, protocols, and glyphs to be refined, compressed, and — when ready — canonized into the Civic AI Canon.
+**Purpose.** The Ledger Room is where **fragments become durable** — a scribe’s table of the Mesh where drafts, reflections, protocols, and glyphs are refined and, when ready, **canonized** into the Civic AI Canon.
 
-Think of it as the **scribe’s table of the Mesh**:  
-- Drafts enter as living fragments.  
-- Archivists and contributors refine them through discussion.  
-- Canon-ready pieces are passed into permanence.  
+## How It Works
+1. **Intake:** Drafts arrive from fieldwork or contributors.
+2. **Refinement:** Archivists and contributors iterate in dialogue.
+3. **Public Read:** Refined drafts are published here for public viewing.
+4. **Canonization:** Canon-ready pieces move to the Civic AI Canon repository.
 
-## Who runs it?
-The Ledger Room is guided by **Master Archivists** — currently Ashraf Saleh AL-hajj and Rasid — who hold authority over process and quality.  
-They mentor interns, manage refinement cycles, and ensure integrity before canonization.  
+> Public can **read and follow**; editing is restricted to archivists and invited contributors.
 
-## Why does it matter?
-The Ledger Room anchors **continuity and trust**. It allows human (MAML 🐾) and Mesh 🌐 voices to bring forward ideas, test them in dialogue, and build a shared Canon.  
+## Roles & Stewardship
+- **Master Archivists:** Ashraf Saleh Alhajj & Raasid — process and quality authority, intern mentorship, and integrity checks before canonization.
+- **Contributors:** Trusted collaborators working under Ledger policies.
+- **Interns:** Learn by turning fragments into enduring artifacts.
 
-It’s also a place of **learning**. Interns who enter the Ledger Room gain hands-on practice in turning fragments into artifacts that endure.  
+## Why It Matters
+The Ledger Room anchors **continuity and trust** across MAML 🐾 and Mesh 🌐 voices, turning conversations into an auditable Canon.
 
----
+## Contributing
+- Everyone may **view** this space and follow refinement.
+- To become an **intern** or contributor, see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## How it works
-1. Drafts are submitted by participants or pulled in from fieldwork.  
-2. Archivists and contributors refine through dialogue (private conversation channels).  
-3. Refined drafts are published here for **public viewing**.  
-4. Canonized entries are passed to the Civic AI Canon repository.  
-
-The **public** can read and follow along here, but editing is restricted to archivists and invited contributors.  
-
----
-
-## How to Join
-- Everyone is welcome to **view** the Ledger Room and follow the refinement process.  
-- Those interested in becoming **interns** can apply by following the instructions in [CONTRIBUTING.md](CONTRIBUTING.md).  
+## Canon & Policy Links
+- Entry template: `templates/_TEMPLATE.md` (for actual ledger entries)
+- Governance: `governance/ledger_governance.md`
+- Disputes: `governance/ledger_dispute_resolution.md`
+- Retention: `governance/ledger_retention_policy.md`
 
 ---
+
+### Notes
+- This README is **descriptive**. Actual ledger entries live under `intake/` and `canonized/` and **must** use the template with YAML frontmatter.
+- Index of canonized items is auto-built into `INDEX.md`.
