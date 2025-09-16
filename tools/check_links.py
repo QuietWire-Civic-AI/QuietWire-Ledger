@@ -1,36 +1,16 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-QuietWire Ledger — Link Checker (Pro Edition)
----------------------------------------------
+QuietWire Ledger - Link Checker (Pro Edition)
 Validate external (HTTP/HTTPS) and internal (relative) links in Markdown files.
-
-Features
-- HEAD with intelligent GET fallback (handles 405/403/501), redirects, timeouts.
-- Concurrency with bounded workers.
-- Rejects private/localhost targets; optional allow/deny host lists.
-- Verifies relative paths exist; verifies in-page anchors (#slug) against headings.
-- GitHub Actions annotations (errors/warnings) for inline feedback.
-- JSON or text report; optional cache to avoid re-hitting the same URL.
-- Strict mode to fail CI on warnings; soft handling for 429 unless --strict.
-- Zero external deps (stdlib only).
-
-Usage
-  python tools/check_links.py --root . \
-    --glob "canonized/**/*.md" --glob "intake/**/*.md" --glob "README.md" \
-    --ignore "**/attachments/**" --workers 16 --timeout 10 --format text
-
-Exit codes
-  0 => OK
-  1 => Errors found (or warnings in --strict)
 """
+
 from __future__ import annotations
 
 import argparse
 import dataclasses
 import ipaddress
 import json
-import os
 import re
 import sys
 import time
@@ -39,7 +19,7 @@ from contextlib import closing
 from dataclasses import dataclass, field
 from html import unescape
 from pathlib import Path
-from typing import Dict, Iterable, List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 from urllib.parse import urlparse, urlunparse
 from urllib.request import Request, urlopen
 
@@ -47,9 +27,9 @@ from urllib.request import Request, urlopen
 
 LINK_RE = re.compile(
     r"""
-    (?:!?\[ [^\]]* \] \( (?P<md>[^)]+) \))     # Markdown [text](URL) / image ![...](URL)
-    | <(?P<angle>https?://[^>\s]+)>            # Autolink <http://...>
-    | (?<!\()(?P<bare>https?://[^\s)]+)        # Bare URL not immediately after '('
+    (?:!?\[[^\]]*\]\((?P<md>[^)]+)\))        # Markdown [text](URL) or image ![...](URL)
+    | <(?P<angle>https?://[^>\s]+)>          # Autolink <http://...>
+    | (?<!\()(?P<bare>https?://[^\s)]+)      # Bare URL not immediately after '('
     """,
     re.VERBOSE,
 )
@@ -94,7 +74,6 @@ def gha(level: str, path: Path, line: int, msg: str) -> None:
 
 def normalize_url(url: str) -> str:
     url = url.strip().strip(").,;")
-    # collapse multiple slashes after scheme
     try:
         u = urlparse(url)
         if u.scheme in ("http", "https"):
@@ -111,7 +90,6 @@ def is_private_host(host: str) -> bool:
         ip = ipaddress.ip_address(host)
         return any(ip in n for n in PRIVATE_NETS)
     except ValueError:
-        # Not an IP; check common local hostnames
         return host.lower() in {"localhost", "localhost.localdomain", "0.0.0.0"}
 
 def http_ok(url: str, timeout: float = 8.0, max_redirects: int = 5) -> Tuple[bool, Optional[int], Optional[str], str]:
@@ -131,7 +109,6 @@ def http_ok(url: str, timeout: float = 8.0, max_redirects: int = 5) -> Tuple[boo
                     current = new_url
                     seen += 1
                     continue
-                # Some servers block HEAD — retry with GET once
                 if method == "HEAD" and code in (400, 401, 403, 405, 501):
                     method = "GET"
                     continue
@@ -269,7 +246,6 @@ def process_file(p: Path, verify_rel: bool, timeout: float, external_only: bool,
                 findings.append(Finding(str(p), line, url, "external", "error", "denied_host"))
                 continue
             if allow_hosts and not any(host.endswith(a) for a in allow_hosts):
-                # Not allowed — treat as warning (can be escalated in CI)
                 findings.append(Finding(str(p), line, url, "external", "warning", "not_in_allowlist"))
             if is_private_host(host):
                 findings.append(Finding(str(p), line, url, "external", "error", "private_or_localhost"))
@@ -283,7 +259,6 @@ def process_file(p: Path, verify_rel: bool, timeout: float, external_only: bool,
         if not external_only:
             ok, reason = check_internal(p, url)
             findings.append(Finding(str(p), line, url, "internal", "ok" if ok else "error", reason))
-        # else: ignore relative links entirely
     return findings
 
 def render_text(findings: List[Finding]) -> str:
@@ -303,7 +278,7 @@ def render_json(findings: List[Finding]) -> str:
     return json.dumps([dataclasses.asdict(f) for f in findings], ensure_ascii=False, indent=2)
 
 def main() -> int:
-    ap = argparse.ArgumentParser(description="QuietWire — Markdown Link Checker")
+    ap = argparse.ArgumentParser(description="QuietWire - Markdown Link Checker")
     ap.add_argument("--root", default=".", help="Repo root")
     ap.add_argument("--glob", action="append", default=DEFAULT_GLOBS, help="Glob(s) to scan")
     ap.add_argument("--ignore", action="append", default=DEFAULT_IGNORES, help="Ignore patterns (fnmatch)")
@@ -311,8 +286,8 @@ def main() -> int:
     ap.add_argument("--timeout", type=float, default=8.0)
     ap.add_argument("--no-verify-rel", action="store_true")
     ap.add_argument("--external-only", action="store_true")
-    ap.add_argument("--allow-host", action="append", default=[], help="Whitelist host suffix (may repeat)")
-    ap.add_argument("--deny-host", action="append", default=[], help="Block host suffix (may repeat)")
+    ap.add_argument("--allow-host", action="append", default=[], help="Allow host suffix (may repeat)")
+    ap.add_argument("--deny-host", action="append", default=[], help="Deny host suffix (may repeat)")
     ap.add_argument("--format", choices=["text","json"], default="text")
     ap.add_argument("--report", default="-", help="Output path or '-' for stdout")
     ap.add_argument("--strict", action="store_true", help="Treat warnings as failures")
@@ -353,7 +328,7 @@ def main() -> int:
             gha("warning", Path(f.path), f.line, f"{f.url} — {f.reason}")
 
     # Render report
-    out = render_json(all_findings) if args.format == "json" else render_text(all_findings)
+    out = render_json(all_findings) if args.format == "json" else render_text(findings=all_findings)
     if args.report == "-" or not args.report:
         print(out)
     else:
@@ -366,4 +341,3 @@ def main() -> int:
 
 if __name__ == "__main__":
     sys.exit(main())
-``` [❶](code://python)
